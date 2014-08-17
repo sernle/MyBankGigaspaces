@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:os-core="http://www.openspaces.org/schema/core"
+       xmlns:os-events="http://www.openspaces.org/schema/events"
+       xmlns:os-remoting="http://www.openspaces.org/schema/remoting"
+       xmlns:os-sla="http://www.openspaces.org/schema/sla"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.openspaces.org/schema/core http://www.openspaces.org/schema/core/openspaces-core.xsd
+       http://www.openspaces.org/schema/events http://www.openspaces.org/schema/events/openspaces-events.xsd
+       http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/remoting/openspaces-remoting.xsd
+       http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/sla/openspaces-sla.xsd">
+
+	<os-core:annotation-support />
+	<!-- Enables the usage of @GigaSpaceContext annotation based injection. -->
+    <os-core:giga-space-context/>
+    
+    <!-- 
+    	<os-core:space id="space" url="/./myBank" lookup-timeout="3000"/>  
+    	<os-core:space id="space" url="jini://*/*/myBankSpace" />
+    -->
+    
+	<os-core:distributed-tx-manager id="transactionManagerGigaspaces" />
+    <tx:annotation-driven transaction-manager="transactionManagerGigaspaces" />
+	
+    <os-core:giga-space id="gigaSpace" space="space" tx-manager="transactionManagerGigaspaces"/>
+    
+    <!--
+        An external data source that will be responsible for persisting changes done on the cluster that
+        connects to this mirror using Hibernate.
+    -->
+    <bean id="hibernateDataSource" class="org.openspaces.persistency.hibernate.DefaultHibernateExternalDataSource">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        
+        <property name="initialLoadEntries">
+            <list>
+                <value>com.mybank.model.Account</value>
+                <value>com.mybank.model.Client</value>
+                <value>com.mybank.model.Movement</value>
+            </list>
+        </property>
+         <property name="managedEntries">
+            <list>
+                <value>com.mybank.model.Account</value>
+                <value>com.mybank.model.Client</value>
+                <value>com.mybank.model.Movement</value>
+            </list>
+        </property>
+    </bean>
+    
+    <os-sla:sla cluster-schema="partitioned-sync2backup" number-of-instances="2" number-of-backups="1" max-instances-per-vm="1"/>
+    
+    <!--
+        The space is configured to connect to a mirror, and uses the configured external data source
+        to perform the initial load operation from the database when the Space starts up.
+    -->
+    <os-core:space id="space" url="/./myBankSpace" schema="persistent" mirror="true" external-data-source="hibernateDataSource">
+        <os-core:properties>
+            <props> 
+                <prop key="cluster-config.cache-loader.external-data-source">true</prop>
+                <prop key="cluster-config.cache-loader.central-data-source">true</prop>
+                <prop key="cluster-config.mirror-service.bulk-size">100</prop>
+                <prop key="cluster-config.mirror-service.interval-millis">2000</prop>
+                <prop key="cluster-config.mirror-service.interval-opers">100</prop>
+                <prop key="cluster-config.groups.group.repl-policy.replication-mode">sync</prop>
+				<prop key="cluster-config.groups.group.repl-policy.repl-original-state">true</prop>
+				<prop key="cluster-config.groups.group.fail-over-policy.fail-over-find-timeout">5000</prop>
+				<prop key="cluster-config.mirror-service.url">/./myBankSpaceMirror</prop>
+				
+                 <!-- Use ALL IN CACHE -->
+                <prop key="space-config.engine.cache_policy">1</prop>
+                <!-- 
+                <prop key="space-config.external-data-source.usage">read-only</prop>
+                 -->
+                <prop key="space-config.proxy-settings.connection-retries">100</prop>
+                <prop key="space-config.mirror-service.operation-grouping">group-by-space-transaction</prop>
+            </props>
+        </os-core:properties>
+    </os-core:space>
+    
+    <!--
+        The mirror space. Uses the Hiberante external data source. Persists changes done on the Space that
+        connects to this mirror space into the database using Hibernate.
+     -->
+	<os-core:space id="mirror" url="/./myBankSpaceMirror" schema="mirror" external-data-source="hibernateDataSource" >
+		<os-core:properties>
+			<props>
+				<prop key="space-config.mirror-service.cluster.name">myBankSpace</prop>
+			</props>
+		</os-core:properties>
+	</os-core:space>
+   
+    
+    
+    <!--  
+    <os-remoting:service-exporter id="remotingServiceExporter"/>
+    -->
+</beans>

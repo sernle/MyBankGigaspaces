@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+    
+	<!-- Activa la configuración por medio de anotaciones /-->
+    <context:annotation-config/>
+    <!-- Activa el manejo transaccional por medio de anotaciones 
+	<tx:annotation-driven />-->
+	
+	<!-- Se realiza el scaneo de los paquetes en búsqueda de componentes -->
+	<context:component-scan base-package="com.mybank.service"/>
+	<context:component-scan base-package="com.mybank.persistence"/>
+	<context:component-scan base-package="com.mybank.model"/>
+	
+	<!-- Se define el manejo transaccional 
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>-->
+	
+	<!-- Hibernate SessionFactory bean. Uses the pooled data source to connect to the database. -->
+     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.mybank.model"/>
+        
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- Declaración del DataSource (Para la prueba se puede dejar acá, pero acostumbrado dejar que el servidor se encargue)-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="org.postgresql.Driver" />
+		<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/myBank" />
+		<property name="user" value="postgres" />
+		<property name="password" value="Desarroll0" />
+		<property name="maxPoolSize" value="10" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxStatements" value="0" />
+	</bean>
+	
+	<import resource="gigaspaces-context.xml"/>
+    <import resource="webapp-context.xml"/>
+    
+    <!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
+    <bean id="bankService" class="com.mybank.service.BankGigaspaceService"/>
+</beans>

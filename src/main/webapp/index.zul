@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<borderlayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd "
+	xmlns="http://www.zkoss.org/2005/zul" xmlns:h="http://www.w3.org/1999/xhtml"
+	apply="com.mybank.web.zk.LayoutController">
+	
+    <north size="20%">
+    	<h:div style="background:#084B8A; text-align:center; height:100%; padding-top:3%;">
+    		<label value="MyBank App!!!" style="color:white;font-size:30px;"/>
+        </h:div>
+    </north>
+    <center margins="20, 20, 20, 20">
+	    <vlayout>
+	    	<include id="transactionsLayout" src="/WEB-INF/zk_includes/bank_transactions.zul"/>
+	    	<include id="reportLayout" src="/WEB-INF/zk_includes/bank_reports.zul"/>    
+	    </vlayout>
+    </center>
+    
+    <west title="Opciones" size="20%">
+    	<vlayout>
+	    	<button id="clientLayoutButton" label="Clientes"/>
+	    	<button id="reportLayoutButton" label="Reportes"/>
+    	</vlayout>
+    </west>
+</borderlayout>

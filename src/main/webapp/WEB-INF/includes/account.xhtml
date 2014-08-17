@@ -1,0 +1,63 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="formAccountList">
+		<p:dataTable id="accounts" var="account" value="#{bankBean.currentAccounts}"
+			selection="#{bankBean.selectedAccount}" selectionMode="single" rowKey="#{account.id}"
+			emptyMessage="No se tienen cuentas registradas para el cliente seleccionado" rendered="#{!bankBean.showAccountForm}">
+			<f:facet name="header">  
+				<div class="table-title">
+	        		<p:commandButton action="#{bankBean.initFormAccount}" process="@this" update=":formAccountList :formAccountEdit" 
+						icon="ui-icon-search" value="Agregar Cuenta" rendered="#{bankBean.selectedClient != null}"/>
+	        	</div>
+            	Cuentas Registradas  
+        	</f:facet>
+        	
+			<p:column headerText="Numero">  
+	            #{account.number}
+	        </p:column>
+			<p:column headerText="Saldo">  
+	            #{account.balance}
+	        </p:column>
+	        <p:column headerText="Opciones" width="22%">
+				<p:commandButton  action="#{bankBean.displayAccountForm}" process="@this" 
+					update=":formAccountList :formAccountEdit" value="Editar">
+					<f:setPropertyActionListener value="#{account}" target="#{bankBean.formAccount}" />
+				</p:commandButton>
+				<p:commandButton process="@this" update=":formAccountList" value="Eliminar" action="#{bankBean.deleteAccount}">
+					<f:setPropertyActionListener value="#{account}" target="#{bankBean.formAccount}"/>
+					<p:confirm header="Confirmación" message="Estas seguro de eliminar la cuenta? Se eliminarán todos los movimientos asociados!" icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:commandButton process="@this" value="+ Movimiento" oncomplete="movementDialog.show()" action="#{bankBean.initMovement}">
+					<f:setPropertyActionListener value="#{account}" target="#{bankBean.selectedAccount}"/>
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	
+	<h:form id="formAccountEdit">
+		<h:panelGrid columns="2" cellpadding="4" style="margin:0 auto;" rendered="#{bankBean.showAccountForm}">
+			<f:facet name="header">  
+               	Modificar Cuenta
+            </f:facet>
+			
+			<h:outputText value="Número:" />
+			<p:inputText value="#{bankBean.formAccount.number}"/>
+
+			<h:outputText value="Balance:" />
+			<p:inputText value="#{bankBean.formAccount.balance}">
+				<f:validateLongRange minimum="0"/>
+			</p:inputText>
+
+			<f:facet name="footer">
+				<p:commandButton value="Guardar" action="#{bankBean.saveAccount}" process=":formAccountEdit" 
+					update=":formAccountList :formAccountEdit :messages"/>
+				<p:commandButton value="Cancelar" action="#{bankBean.displayAccountList}" process="@this" update=":formAccountList :formAccountEdit"/>
+			</f:facet>
+		</h:panelGrid>
+	</h:form>
+</ui:composition>

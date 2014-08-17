@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>MyBank</groupId>
+	<artifactId>MyBank</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>My Bank</name>
+
+	<developers>
+		<developer>
+			<id>htenjo</id>
+			<name>Hernán Darío Tenjo Mateus</name>
+			<email>zerovirus23@gmail.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<ext-libs-scope>compile</ext-libs-scope>
+
+		<!-- Utilitarios: Librerias de Commons y para la gestión de logs -->
+		<slf4j-version>1.6.4</slf4j-version>
+		<logback-version>1.0.1</logback-version>
+		<commons-beanutils-version>1.8.3</commons-beanutils-version>
+		<commons-codec-version>1.4</commons-codec-version>
+		<commons-collections-version>3.2.1</commons-collections-version>
+		<commons-digester-version>2.0</commons-digester-version>
+		<commons-lang-version>2.4</commons-lang-version>
+
+		<!-- Para la persistencia y los servicios -->
+		<postgresql-version>9.1-901-1.jdbc4</postgresql-version>
+		<c3p0-version>0.9.1.2</c3p0-version>
+		<hibernate-version>3.5.4-Final</hibernate-version>
+		<spring-version>3.2.0.RELEASE</spring-version>
+
+		<!-- Para la presentación -->
+		<jstl-version>1.2</jstl-version>
+		<jsf-version>2.1.7</jsf-version>
+		<primefaces-aristo-version>1.0.1</primefaces-aristo-version>
+		<primefaces-casablanca-version>1.0.3</primefaces-casablanca-version>
+		<primefaces-version>4.0</primefaces-version>
+
+		<!-- Para pruebas -->
+		<junit-version>4.8</junit-version>
+	</properties>
+	<repositories>
+   		<repository>
+			<id>ZK CE</id>
+			<name>ZK CE Repository</name>
+			<url>http://mavensync.zkoss.org/maven2</url>
+   		</repository>
+	</repositories>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Librerias con funcionalidades comunes a todos los proyectos -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons-collections-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>${commons-digester-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons-lang-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+
+		<!-- Para la gestion del Pool de conexiones a la BD -->
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>${c3p0-version}</version>
+		</dependency>
+
+		<!-- ORM que implementa JPA para el mapeo a BD -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+
+		<!-- Dependencias de Spring para el manejo de servicios, transacciones, 
+			etc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+
+		<!-- Dependencias para la presentación (Se manejará JSF) -->
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>${jsf-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>${jsf-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		<!-- <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-jpa</artifactId> 
+			<version>1.4.3.RELEASE</version> </dependency> -->
+		<!-- Suit de componentes complementarios a JSF estandar -->
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>${primefaces-version}</version>
+			<scope>${ext-libs-scope}</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.zkoss.zk</groupId>
+		    <artifactId>zul</artifactId>
+		    <version>5.0.11</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.zkoss.zk</groupId>
+		    <artifactId>zkplus</artifactId>
+		    <version>5.0.11</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.zkoss.zk</groupId>
+		    <artifactId>zhtml</artifactId>
+		    <version>5.0.11</version>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,12 @@
+.ui-widget, .ui-widget .ui-widget{
+    font-size: 90% !important;
+}
+
+.table-title{
+	text-align: right;
+	height: 12px;
+}
+
+.menu_button{
+	width:190px;
+}

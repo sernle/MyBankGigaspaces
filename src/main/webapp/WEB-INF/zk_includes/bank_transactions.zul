@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<vlayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd "
+	xmlns="http://www.zkoss.org/2005/zul" xmlns:h="http://www.w3.org/1999/xhtml"
+	id="myLayout" apply="com.mybank.web.zk.BankController">
+	<listbox id="clientList" emptyMessage="No hay clientes creados" width="80%" style="margin:20px;">
+		<auxhead>
+			<auxheader colspan="4" align="center">
+				<label value="Clientes Registrados en MyBank" />
+
+				<h:div align="right" style="float:right;">
+					<button id="addClientButton" label="Agregar Cliente" />
+				</h:div>
+			</auxheader>
+		</auxhead>
+		<listhead>
+			<listheader label="Nombre" />
+			<listheader label="Dirección" />
+			<listheader label="Teléfono" />
+			<listheader label="Opciones" />
+		</listhead>
+	</listbox>
+	<groupbox id="clientForm" width="80%" style="margin:20px;">
+		<caption label="Información del Cliente" />
+		<hlayout>
+			<label value="Nombre:" />
+			<textbox id="clientName" />
+		</hlayout>
+		<hlayout>
+			<label value="Dirección" />
+			<textbox id="clientAddress" />
+		</hlayout>
+		<hlayout>
+			<label value="Teléfono:" />
+			<textbox id="clientPhone" />
+		</hlayout>
+		<hlayout>
+			<button id="cancelClientFormButton" label="Cancelar" />
+			<button id="saveClientFormButton" label="Aceptar" />
+		</hlayout>
+	</groupbox>
+
+	<listbox id="accountList"
+		emptyMessage="No hay cuentas creadas para el cliente seleccionado"
+		width="80%" style="margin:20px;">
+		<auxhead>
+			<auxheader colspan="3" align="center">
+				<label value="Cuentas Registradas para el Cliente Seleccionado" />
+
+				<h:div align="right" style="float:right;">
+					<button id="addAccountButton" label="Agregar Cuenta" />
+				</h:div>
+			</auxheader>
+		</auxhead>
+
+		<listhead>
+			<listheader label="Número" hflex="2" />
+			<listheader label="Saldo" hflex="1" />
+			<listheader label="Opciones" hflex="2" />
+		</listhead>
+	</listbox>
+	<groupbox id="accountForm" width="80%" style="margin:20px;">
+		<caption label="Información de la cuenta" />
+		<hlayout>
+			<label value="Número:" />
+			<textbox id="accountNumber" />
+		</hlayout>
+		<hlayout>
+			<label value="Balance:" />
+			<doublebox id="accountBalance" />
+		</hlayout>
+		<hlayout>
+			<button id="cancelAccountFormButton" label="Cancelar" />
+			<button id="saveAccountFormButton" label="Aceptar" />
+		</hlayout>
+	</groupbox>
+
+	<window id="movementWindow" title="Movimientos" width="500px" border="normal" mode="modal">
+		<groupbox width="80%" style="margin:20px;">
+			<caption label="Registrar Movimiento" />
+			<hlayout>
+				<label value="Tipo de Movimiento:" />
+				<combobox id="movementType" width="150px" constraint="no empty">
+					<comboitem label="Crédito" value="true" />
+					<comboitem label="Débito" value="false" />
+				</combobox>
+			</hlayout>
+			<hlayout>
+				<label value="Valor del Movimiento:" />
+				<doublebox id="movementValue" constraint="no empty"
+					value="0" />
+			</hlayout>
+			<hlayout>
+				<button id="cancelMovementFormButton" label="Cancelar" />
+				<button id="saveMovementFormButton" label="Aceptar" />
+			</hlayout>
+		</groupbox>
+	</window>
+</vlayout>

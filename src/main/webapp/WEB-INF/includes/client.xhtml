@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formClientList">
+		<p:dataTable id="clients" var="client" value="#{bankBean.currentClients}" rowKey="#{client.id}"
+			selection="#{bankBean.selectedClient}" selectionMode="single" rendered="#{!bankBean.showClientForm}"
+			emptyMessage="No se tienen clientes registrados">
+			
+			<p:ajax event="rowSelect" update=":formAccountList:accounts" />
+			
+			<f:facet name="header">
+				<div class="table-title">
+					<p:commandButton action="#{bankBean.initFormClient}" process="@this" 
+						update=":formClientList :formClientEdit" value="Agregar Cliente" />
+				</div>
+				<h:outputText value="Clientes de MyBank" />
+			</f:facet>
+
+			<p:column headerText="Nombre">#{client.name} </p:column>
+			<p:column headerText="Dirección">#{client.address}</p:column>
+			<p:column headerText="Teléfono">#{client.phoneNumber}</p:column>
+			<p:column headerText="Opciones" width="15%">
+				<p:commandButton action="#{bankBean.displayClientForm}" process="@this" update=":formClientList :formClientEdit" value="Editar">
+					<f:setPropertyActionListener value="#{client}" target="#{bankBean.formClient}"/>
+				</p:commandButton>
+				<p:commandButton process="@this" update=":formClientList :formAccountList:accounts" value="Eliminar" action="#{bankBean.deleteClient}">
+					<f:setPropertyActionListener value="#{client}" target="#{bankBean.formClient}"/>
+					<p:confirm header="Confirmación" message="Estas seguro de eliminar el cliente? Se eliminarán las cuentas y movimientos asociados!" icon="ui-icon-alert" /> 
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+	<h:form id="formClientEdit">
+		<h:panelGrid columns="2" cellpadding="4" style="margin:0 auto;" rendered="#{bankBean.showClientForm}">
+			<f:facet name="header">  
+               	Modificar Cliente
+            </f:facet>
+
+			<h:outputText value="Nombre:" />
+			<p:inputText value="#{bankBean.formClient.name}" required="true"/>
+
+			<h:outputText value="Dirección:" />
+			<p:inputText value="#{bankBean.formClient.address}"  required="true"/>
+
+			<h:outputText value="Teléfono:" />
+			<p:inputText value="#{bankBean.formClient.phoneNumber}" required="true"/>
+
+			<f:facet name="footer">
+				<p:commandButton value="Guardar" action="#{bankBean.saveClient}" process=":formClientEdit :formAccountList" 
+					update=":formClientList :formClientEdit :messages"/>
+				<p:commandButton value="Cancelar" action="#{bankBean.displayClientList}" process="@this" update=":formClientList :formClientEdit"/>
+			</f:facet>
+		</h:panelGrid>
+	</h:form>
+</ui:composition>

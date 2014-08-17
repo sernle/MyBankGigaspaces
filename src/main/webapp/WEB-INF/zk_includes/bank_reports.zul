@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+
+ <vlayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd "
+	xmlns="http://www.zkoss.org/2005/zul" xmlns:h="http://www.w3.org/1999/xhtml"
+	id="reportInfo" apply="com.mybank.web.zk.ReportController">
+	
+	<groupbox id="reportForm" width="80%" style="margin:20px;">
+		<caption label="Parámetros del Reporte" />
+		<hlayout>
+			<label value="Cliente:" />
+			<combobox id="clientComboBox" constraint="no empty"/>
+		</hlayout>
+		<hlayout>
+			<label value="Fecha Inicial:" />
+			<datebox id="startDate" constraint="no empty"/>
+		</hlayout>
+		<hlayout>
+			<label value="Fecha Final:" />
+			<datebox id="endDate" constraint="no empty"/>
+		</hlayout>
+		<hlayout>
+			<button id="buildReportButton" label="Generar Reporte" />
+		</hlayout>
+	</groupbox>
+	
+	<grid id="reportList" emptyMessage="No hay información para el reporte" width="80%" style="margin:20px;">
+		<auxhead>
+			<auxheader colspan="5" align="center">
+				<label value="Reporte de Transacciones MyBank" />
+			</auxheader>
+		</auxhead>
+		<columns>
+			<column label="Cuenta" />
+			<column label="Movimiento" />
+			<column label="Fecha" />
+			<column label="Tipo" />
+			<column label="Valor" />
+		</columns>
+	</grid>
+</vlayout>

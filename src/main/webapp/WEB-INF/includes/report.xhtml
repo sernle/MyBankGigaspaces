@@ -1,0 +1,70 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="formReportEdit">
+		<h:panelGrid columns="2" cellpadding="4" style="margin:0 auto;">
+			<f:facet name="header">  
+               	Reporte de Movimientos
+            </f:facet>
+            
+			<h:outputText value="Cliente:" />
+			<p:autoComplete value="#{reportBean.selectedClient}" completeMethod="#{reportBean.filterClients}"
+        		var="client" itemLabel="#{client.name}" itemValue="#{client}" required="true" 
+        		converter="#{reportBean.clientConverter}"/>
+
+			<h:outputText value="Fecha Inicial:" />
+			<p:calendar value="#{reportBean.startDate}"/>
+
+			<h:outputText value="Fecha Final:" />
+			<p:calendar value="#{reportBean.endDate}"/>
+			
+			<f:facet name="footer">
+				<p:commandButton value="Generar Reporte" action="#{reportBean.buildReport}" 
+					update=":formRepportList"  process="@form"/>
+			</f:facet>
+		</h:panelGrid>
+	</h:form>
+	
+    <h:form id="formRepportList">
+		<p:dataTable var="account" value="#{reportBean.reportInfoAccounts}">
+	        <f:facet name="header">  
+	            Reporte de Movimientos
+	        </f:facet>  
+	  
+	        <p:columnGroup type="header">  
+	            <p:row>  
+	                <p:column rowspan="2" headerText="Cuenta" width="50%"/>  
+	                <p:column colspan="3" headerText="Movimientos" />  
+	            </p:row>  
+	  
+	            <p:row>
+	                <p:column headerText="Fecha" width="15%"/>  
+	                <p:column headerText="Tipo"  width="15%"/>
+	                <p:column headerText="Valor"  width="20%"/>  
+	            </p:row>  
+	        </p:columnGroup>  
+	  
+	        <p:subTable var="movement" value="#{reportBean.reportInfo[account]}">  
+	            <f:facet name="header">  
+	              Cuenta: #{account.number} - Saldo: #{account.balance}   
+	            </f:facet>
+	            <p:column>  
+	                Movimiento   
+	            </p:column>
+	            <p:column>  
+	                #{movement.movDate}  
+	            </p:column>
+	            <p:column>  
+	                #{movement.credit ? 'Crédito' : 'Débito'}  
+	            </p:column>
+	            <p:column>  
+	                #{movement.value}  
+	            </p:column>
+	        </p:subTable>  
+	    </p:dataTable>    
+	</h:form>
+</ui:composition>
